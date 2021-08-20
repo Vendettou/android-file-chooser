@@ -760,6 +760,7 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
         boolean displayPath = false;
         if (_entries.isEmpty() && _currentDir.getParentFile() != null && _currentDir.getParentFile().canRead()) {
             _entries.add(new RootFile(_currentDir.getParentFile().getAbsolutePath(), ".."));
+            _entries.add(new RootFile(_currentDir.getAbsolutePath(), "."));
             displayPath = true;
         }
 
@@ -838,7 +839,7 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
 
         scrollTo = 0;
         File file = _entries.get(position);
-        if (file instanceof RootFile) {
+        if (file.getName().equals("..")) {
             if (_folderNavUpCB == null) _folderNavUpCB = _defaultNavUpCB;
             if (_folderNavUpCB.canUpTo(file)) {
                 _currentDir = file;
@@ -852,7 +853,7 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
         } else {
             switch (_chooseMode) {
                 case CHOOSE_MODE_NORMAL:
-                    if (file.isDirectory()) {
+                    if (file.isDirectory() && !file.getName().equals(".")) {
                         if (_folderNavToCB == null) _folderNavToCB = _defaultNavToCB;
                         if (_folderNavToCB.canNavigate(file)) {
                             _currentDir = file;
