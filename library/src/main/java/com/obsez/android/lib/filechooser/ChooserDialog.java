@@ -871,7 +871,7 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
                     lastSelected = false;
                     break;
                 case CHOOSE_MODE_SELECT_MULTIPLE:
-                    if (file.isDirectory()) {
+                    if (file.isDirectory() && !file.getName().equals(".")) {
                         if (_folderNavToCB == null) _folderNavToCB = _defaultNavToCB;
                         if (_folderNavToCB.canNavigate(file)) {
                             _currentDir = file;
@@ -911,7 +911,7 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View list, int position, long id) {
         File file = _entries.get(position);
-        if (file instanceof RootFile || file.isDirectory()) {
+        if ((file instanceof RootFile || file.isDirectory()) && !file.getName().equals(".")) {
             return true;
         }
         if (_adapter.isSelected(position)) return true;
