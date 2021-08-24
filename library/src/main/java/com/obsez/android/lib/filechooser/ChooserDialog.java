@@ -910,11 +910,15 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View list, int position, long id) {
         File file = _entries.get(position);
-        if (_adapter.isSelected(position)) return true;
         _result.onChoosePath(file.getAbsolutePath(), file);
         _adapter.selectItem(position);
-        _chooseMode = CHOOSE_MODE_SELECT_MULTIPLE;
-        _positiveBtn.setVisibility(View.VISIBLE);
+        if (!_adapter.isAnySelected()) {
+            _chooseMode = CHOOSE_MODE_NORMAL;
+            _positiveBtn.setVisibility(View.INVISIBLE);
+        } else {
+            _chooseMode = CHOOSE_MODE_SELECT_MULTIPLE;
+            _positiveBtn.setVisibility(View.VISIBLE);
+        }
         if (_deleteModeIndicator != null) _deleteModeIndicator.run();
         return true;
     }
