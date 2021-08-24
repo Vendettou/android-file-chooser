@@ -510,11 +510,7 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
 
         if (_dirOnly || _enableMultiple) {
             // choosing folder, or multiple files picker
-            DialogInterface.OnClickListener listener = (dialog, which) -> {
-                if (_result != null) {
-                    _result.onChoosePath(_currentDir.getAbsolutePath(), _currentDir);
-                }
-            };
+            DialogInterface.OnClickListener listener = (dialog, which) -> {};
             if (_okRes != -1) {
                 builder.setPositiveButton(_okRes, listener);
             } else if (_ok != null) {
