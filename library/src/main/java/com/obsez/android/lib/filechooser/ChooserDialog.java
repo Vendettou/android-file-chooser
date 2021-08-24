@@ -760,7 +760,6 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
         boolean displayPath = false;
         if (_entries.isEmpty() && _currentDir.getParentFile() != null && _currentDir.getParentFile().canRead()) {
             _entries.add(new RootFile(_currentDir.getParentFile().getAbsolutePath(), ".."));
-            _entries.add(new RootFile(_currentDir.getAbsolutePath(), "."));
             displayPath = true;
         }
 
@@ -853,7 +852,7 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
         } else {
             switch (_chooseMode) {
                 case CHOOSE_MODE_NORMAL:
-                    if (file.isDirectory() && !file.getName().equals(".")) {
+                    if (file.isDirectory()) {
                         if (_folderNavToCB == null) _folderNavToCB = _defaultNavToCB;
                         if (_folderNavToCB.canNavigate(file)) {
                             _currentDir = file;
@@ -871,7 +870,7 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
                     lastSelected = false;
                     break;
                 case CHOOSE_MODE_SELECT_MULTIPLE:
-                    if (file.isDirectory() && !file.getName().equals(".")) {
+                    if (file.isDirectory()) {
                         if (_folderNavToCB == null) _folderNavToCB = _defaultNavToCB;
                         if (_folderNavToCB.canNavigate(file)) {
                             _currentDir = file;
@@ -911,9 +910,6 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View list, int position, long id) {
         File file = _entries.get(position);
-        if ((file instanceof RootFile || file.isDirectory()) && !file.getName().equals(".")) {
-            return true;
-        }
         if (_adapter.isSelected(position)) return true;
         _result.onChoosePath(file.getAbsolutePath(), file);
         _adapter.selectItem(position);
