@@ -344,6 +344,11 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
         return this;
     }
 
+    public ChooserDialog withPositiveButtonListener(final DialogInterface.OnClickListener listener) {
+        this._positiveListener = listener;
+        return this;
+    }
+
     /**
      * onCancelListener will be triggered on back pressed or clicked outside of dialog
      */
@@ -508,7 +513,7 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
             }
         }
 
-        if (_dirOnly || _enableMultiple) {
+        if (_enableMultiple || (_dirOnly && _positiveListener == null)) {
             // choosing folder, or multiple files picker
             DialogInterface.OnClickListener listener = (dialog, which) -> {};
             if (_okRes != -1) {
@@ -517,6 +522,14 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
                 builder.setPositiveButton(_ok, listener);
             } else {
                 builder.setPositiveButton(R.string.title_choose, listener);
+            }
+        } else if (_dirOnly) {
+            if (_okRes != -1) {
+                builder.setPositiveButton(_okRes, _positiveListener);
+            } else if (_ok != null) {
+                builder.setPositiveButton(_ok, _positiveListener);
+            } else {
+                builder.setPositiveButton(R.string.title_choose, _positiveListener);
             }
         }
 
@@ -945,6 +958,10 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
         lastSelected = false;
     }
 
+    public String getCurrentPath() {
+        return _currentDir.getAbsolutePath();
+    }
+
     List<File> _entries = new ArrayList<>();
     DirAdapter _adapter;
     File _currentDir;
@@ -969,6 +986,7 @@ public class ChooserDialog implements AdapterView.OnItemClickListener, DialogInt
     int _rowLayoutRes = -1;
     private String _dateFormat;
     private DialogInterface.OnClickListener _negativeListener;
+    private DialogInterface.OnClickListener _positiveListener;
     private DialogInterface.OnCancelListener _cancelListener;
     private DialogInterface.OnDismissListener _onDismissListener;
     private boolean _disableTitle;
